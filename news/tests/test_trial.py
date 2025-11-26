@@ -1,17 +1,20 @@
 # news/tests/test_trial.py
 from django.test import TestCase
 
-# Импортируем модель, чтобы работать с ней в тестах.
 from news.models import News
 
 
-class TestNews(TestCase): 
-
+class TestNews(TestCase):
+    # Все нужные переменные сохраняем в атрибуты класса.
+    TITLE = 'Заголовок новости'
+    TEXT = 'Тестовый текст'
+    
     @classmethod
     def setUpTestData(cls):
         cls.news = News.objects.create(
-            title='Заголовок новости',
-            text='Тестовый текст',
+            # При создании объекта обращаемся к константам класса через cls.
+            title=cls.TITLE,
+            text=cls.TEXT,
         )
 
     def test_successful_creation(self):
@@ -19,5 +22,6 @@ class TestNews(TestCase):
         self.assertEqual(news_count, 1)
 
     def test_title(self):
-        # Сравним свойство объекта и ожидаемое значение.
-        self.assertEqual(self.news.title, 'Заголовок новости')
+        # Чтобы проверить равенство с константой -
+        # обращаемся к ней через self, а не через cls:
+        self.assertEqual(self.news.title, self.TITLE)
