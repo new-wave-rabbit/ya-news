@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from news.models import News
 
+class TestHomePage(TestCase):
 
     @classmethod
     def setUpTestData(cls):
