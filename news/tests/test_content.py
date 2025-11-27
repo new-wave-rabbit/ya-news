@@ -14,10 +14,19 @@ class TestHomePage(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        News.objects.bulk_create(
-            News(title=f'Новость {index}', text='Просто текст.')
+        # Вычисляем текущую дату.
+        today = datetime.today()
+        all_news = [
+            News(
+                title=f'Новость {index}',
+                text='Просто текст.',
+                # Для каждой новости уменьшаем дату на index дней от today,
+                # где index - счётчик цикла.
+                date=today - timedelta(days=index)
+            )
             for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
-        )
+        ]
+        News.objects.bulk_create(all_news) 
 
     def test_news_count(self):
         # Загружаем главную страницу.
