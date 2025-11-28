@@ -2,11 +2,16 @@
 from datetime import datetime, timedelta 
 
 from django.conf import settings
+# Импортируем функцию для получения модели пользователя.
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
-from news.models import News
+# Дополнительно к News импортируем модель комментария.
+from news.models import Comment, News
 
+User = get_user_model()
 
 
 class TestHomePage(TestCase):
@@ -47,4 +52,45 @@ class TestHomePage(TestCase):
         # Сортируем полученный список по убыванию.
         sorted_dates = sorted(all_dates, reverse=True)
         # Проверяем, что исходный список был отсортирован правильно.
-        self.assertEqual(all_dates, sorted_dates) 
+        self.assertEqual(all_dates, sorted_dates)
+
+
+class TestDetailPage(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.news = News.objects.create(
+            title='Тестовая новость', text='Просто текст.'
+        )
+        # Сохраняем в переменную адрес страницы с новостью:
+        cls.detail_url = reverse('news:detail', args=(cls.news.id,))
+        cls.author = User.objects.create(username='Комментатор')
+        # Получите текущее время при помощи утилиты timezone.
+        now = timezone.now()
+        # Создаём комментарии в цикле.
+        for index in range(10):
+            # Создаём объект и записываем его в переменную.
+            comment = Comment.objects.create(
+                news=cls.news, author=cls.author, text=f'Tекст {index}',
+            )
+            # Сразу после создания меняем время создания комментария.
+            comment.created = now + timedelta(days=index)
+            # И сохраняем эти изменения.
+            comment.save()
+
+
+    def test_comments_order(self):
+        response = self.client.get(self.detail_url)
+        # Проверяем, что объект новости находится в словаре контекста
+        # под ожидаемым именем - названием модели.
+        self.assertIn('news', response.context)
+        # Получаем объект новости.
+        news = response.context['news']
+        # Получаем все комментарии к новости.
+        all_comments = news.comment_set.all()
+        # Собираем временные метки всех комментариев.
+        all_timestamps = [comment.created for comment in all_comments]
+        # Сортируем временные метки, менять порядок сортировки не надо.
+        sorted_timestamps = sorted(all_timestamps)
+        # Проверяем, что временные метки отсортированы правильно.
+        self.assertEqual(all_timestamps, sorted_timestamps) 
