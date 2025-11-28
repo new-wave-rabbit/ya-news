@@ -8,6 +8,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+# Импортируем класс формы.
+from news.forms import CommentForm
 # Дополнительно к News импортируем модель комментария.
 from news.models import Comment, News
 
@@ -93,4 +95,16 @@ class TestDetailPage(TestCase):
         # Сортируем временные метки, менять порядок сортировки не надо.
         sorted_timestamps = sorted(all_timestamps)
         # Проверяем, что временные метки отсортированы правильно.
-        self.assertEqual(all_timestamps, sorted_timestamps) 
+        self.assertEqual(all_timestamps, sorted_timestamps)
+
+    def test_anonymous_client_has_no_form(self):
+        response = self.client.get(self.detail_url)
+        self.assertNotIn('form', response.context)
+        
+    def test_authorized_client_has_form(self):
+        # Авторизуем клиент при помощи ранее созданного пользователя.
+        self.client.force_login(self.author)
+        response = self.client.get(self.detail_url)
+        self.assertIn('form', response.context)
+        # Проверим, что объект формы соответствует нужному классу формы.
+        self.assertIsInstance(response.context['form'], CommentForm) 
