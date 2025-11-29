@@ -39,3 +39,8 @@ def test_type():
 )
 def test_for_old_versions():
     assert old_version == True
+
+
+@pytest.mark.xfail(reason='Пусть пока падает, завтра починю.')
+def test_false():
+    assert False 
