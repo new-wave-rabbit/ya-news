@@ -12,10 +12,11 @@ def get_sort_list(str):
 
 
 @pytest.mark.parametrize(
-    'input_arg, expected_result',  # Названия аргументов, передаваемых в тест.
-    [(4, 5), (3, 5)]  # Список кортежей со значениями аргументов.
+    'input_arg, expected_result',
+    [(4, 5), (3, 5)],
+    ids=['First parameter', 'Second parameter',]
 )
-def test_one_more(input_arg, expected_result):  # Те же параметры, что и в декораторе.
+def test_one_more(input_arg, expected_result):
     assert one_more(input_arg) == expected_result
 
 
