@@ -1,6 +1,6 @@
 # test_example.py
 import pytest
-
+old_version = True
 
 def one_more(x):
     return x + 1
@@ -32,3 +32,10 @@ def test_type():
     # ожидаем число, но вернётся список.
     result = get_sort_list('Яша, Саша, Маша, Даша')
     assert isinstance(result, int)
+
+@pytest.mark.skipif(
+    "sys.version_info > (2, 7)",
+    reason='Только для старых версий Python'
+)
+def test_for_old_versions():
+    assert old_version == True
