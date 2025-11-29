@@ -11,13 +11,12 @@ def get_sort_list(str):
     return new_list
 
 
-def test_correct():
-    assert one_more(4) == 5
-
-
-@pytest.mark.skip(reason='Что-то не работает')  # Маркер.
-def test_fail():
-    assert one_more(3) == 5
+@pytest.mark.parametrize(
+    'input_arg, expected_result',  # Названия аргументов, передаваемых в тест.
+    [(4, 5), (3, 5)]  # Список кортежей со значениями аргументов.
+)
+def test_one_more(input_arg, expected_result):  # Те же параметры, что и в декораторе.
+    assert one_more(input_arg) == expected_result
 
 
 def test_sort():
