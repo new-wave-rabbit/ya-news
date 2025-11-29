@@ -43,4 +43,4 @@ def test_for_old_versions():
 
 @pytest.mark.xfail(reason='Пусть пока падает, завтра починю.')
 def test_false():
-    assert False 
+    assert False
