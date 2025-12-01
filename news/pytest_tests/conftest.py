@@ -46,19 +46,19 @@ def comment(db, news, author):
 #     return django_user_model.objects.create(username='Не автор')
 
 
-# @pytest.fixture
-# def author_client(author):  # Вызываем фикстуру автора.
-#     # Создаём новый экземпляр клиента, чтобы не менять глобальный.
-#     client = Client()
-#     client.force_login(author)  # Логиним автора в клиенте.
-#     return client
+@pytest.fixture
+def author_client(author):  # Вызываем фикстуру автора.
+    # Создаём новый экземпляр клиента, чтобы не менять глобальный.
+    client = Client()
+    client.force_login(author)  # Логиним автора в клиенте.
+    return client
 
 
-# @pytest.fixture
-# def not_author_client(not_author):
-#     client = Client()
-#     client.force_login(not_author)  # Логиним обычного пользователя в клиенте.
-#     return client
+@pytest.fixture
+def reader_client(reader):
+    client = Client()
+    client.force_login(reader)  # Логиним обычного пользователя в клиенте.
+    return client
 
 
 # @pytest.fixture
