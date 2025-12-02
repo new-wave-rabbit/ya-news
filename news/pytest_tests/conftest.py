@@ -11,13 +11,13 @@ User = get_user_model()
 
 
 @pytest.fixture
-def author(db):
-    return User.objects.create(username="Лев Толстой")
+def author(django_user_model):
+    return django_user_model.objects.create(username='Лев Толстой')
 
 
 @pytest.fixture
-def reader(db):
-    return User.objects.create(username="Читатель простой")
+def reader(django_user_model):
+    return django_user_model.objects.create(username='Читатель простой')
 
 
 @pytest.fixture
