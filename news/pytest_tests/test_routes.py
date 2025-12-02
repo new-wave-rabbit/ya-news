@@ -1,11 +1,11 @@
-# test_routes.py
 import pytest
-from pytest_django.asserts import assertRedirects
-from pytest_lazy_fixtures import lf
 
 from http import HTTPStatus
 
 from django.urls import reverse
+
+from pytest_django.asserts import assertRedirects
+from pytest_lazy_fixtures import lf
 
 @pytest.mark.parametrize(
     'name,args',
@@ -16,8 +16,7 @@ from django.urls import reverse
         ('users:signup', None),
     ]
 )
-def test_pages_availability(client, news, name, args):
-    # если не используешь lazy_fixture, можно так:
+def test_pages_availability(client, name, args):
     if name == 'news:detail':
         args = (args.id,)
     url = reverse(name, args=args)
@@ -58,4 +57,3 @@ def test_redirect_for_anonymous_client(client, name, c):
     redirect_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, redirect_url)
-
